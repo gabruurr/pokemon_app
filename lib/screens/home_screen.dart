@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,6 +23,22 @@ class _HomeScreenState extends State<HomeScreen> {
     'Gráficos',
   ];
 
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  void _playClickSound() {
+    _audioPlayer.play(AssetSource('audio/sound.mp3'));
+  }
+
+  void _stopSound() {
+    _audioPlayer.stop();
+  }
+
   Widget _buildPokemonListView(List<Pokemon> pokemonList) {
     if (pokemonList.isEmpty) {
       return const Center(
@@ -43,8 +60,8 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
-  
-   @override
+
+  @override
   Widget build(BuildContext context) {
     return BlocListener<PokemonBloc, PokemonState>(
       listener: (context, state) {
@@ -97,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => Placeholder()),
+                    MaterialPageRoute(builder: (_) => const Placeholder()),
                   );
                 },
                 tooltip: 'Capturar Pokemon',
@@ -118,7 +135,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
           currentIndex: _selectedIndex,
           onTap: (int index) {
-           
+            _stopSound();
+            _playClickSound();
+
             setState(() {
               _selectedIndex = index;
             });
