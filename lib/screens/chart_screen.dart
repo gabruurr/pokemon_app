@@ -23,4 +23,44 @@ class _ChartScreenState extends State<ChartScreen> {
     // TODO: implement build
     throw Placeholder();
   }
+
+
+Widget _buildPieChartView(List<Pokemon> pokemons) {
+    final totalEquipe = pokemons.where((p) => p.estaNaEquipe).length;
+    final totalPC = pokemons.where((p) => !p.estaNaEquipe).length;
+
+    if (totalEquipe == 0 && totalPC == 0) {
+      return const Center(
+        child:
+            Text('Nenhum Pokémon cadastrado.', style: TextStyle(fontSize: 18)),
+      );
+    }
+
+    return PieChart(
+      PieChartData(
+        centerSpaceColor: const Color.fromARGB(255, 217, 214, 214),
+        sections: [
+          PieChartSectionData(
+            color: const Color.fromARGB(255, 255, 255, 255),
+            value: totalEquipe.toDouble(),
+            title: 'Equipe ($totalEquipe)',
+            radius: 80,
+            titleStyle: const TextStyle(
+                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          PieChartSectionData(
+            color: const Color.fromARGB(255, 255, 3, 3),
+            value: totalPC.toDouble(),
+            title: 'PC ($totalPC)',
+            radius: 80,
+            titleStyle: const TextStyle(
+                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+        ],
+        sectionsSpace: 4,
+        centerSpaceRadius: 60,
+      ),
+    );
+  }
+
 }
