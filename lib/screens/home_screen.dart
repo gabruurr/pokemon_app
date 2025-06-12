@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../bloc/pokemon_bloc.dart';
+import '../bloc/pokemon_event.dart';
+import '../bloc/pokemon_state.dart';
 import '../models/pokemon.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -40,9 +44,89 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
   
-  @override
+   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw Placeholder();
+    return BlocListener<PokemonBloc, PokemonState>(
+      listener: (context, state) {
+        if (state is PokemonOperationFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(_appBarTitles[_selectedIndex]),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              tooltip: 'Recarregar',
+              onPressed: () => context.read<PokemonBloc>().add(LoadPokemons()),
+            ),
+          ],
+        ),
+        body: BlocBuilder<PokemonBloc, PokemonState>(
+          builder: (context, state) {
+            if (state is PokemonLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state is PokemonLoaded) {
+              final equipe =
+                  state.pokemons.where((p) => p.estaNaEquipe).toList();
+              final pc = state.pokemons.where((p) => !p.estaNaEquipe).toList();
+
+              final List<Widget> screens = [
+                _buildPokemonListView(equipe),
+                _buildPokemonListView(pc),
+                const Placeholder(),
+              ];
+
+              return screens[_selectedIndex];
+            }
+            if (state is PokemonError) {
+              return Center(child: Text('Erro: ${state.message}'));
+            }
+            return const Center(child: Text('Nenhum Pokémon encontrado.'));
+          },
+        ),
+        floatingActionButton: _selectedIndex == 0
+            ? FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => Placeholder()),
+                  );
+                },
+                tooltip: 'Capturar Pokemon',
+                child: const Icon(Icons.add),
+              )
+            : null,
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.catching_pokemon),
+              label: 'Equipe',
+            ),
+            BottomNavigationBarItem(icon: Icon(Icons.computer), label: 'PC'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.pie_chart),
+              label: 'Gráfico',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          onTap: (int index) {
+           
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          selectedItemColor: Theme.of(context).colorScheme.primary,
+          unselectedItemColor: Colors.grey,
+        ),
+      ),
+    );
   }
 }
