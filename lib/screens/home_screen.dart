@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _playClickSound() {
-    _audioPlayer.play(AssetSource('audio/sound.mp3'));
+    _audioPlayer.play(AssetSource('audios/sound.mp3'));
   }
 
   void _stopSound() {
