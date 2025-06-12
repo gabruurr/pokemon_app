@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pokemon_app/screens/home_screen.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 
@@ -29,7 +30,7 @@ class PokemonApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Pokémon App',
         theme: AppTheme.theme,
-        home: const Placeholder(),
+        home: const HomeScreen(),
       ),
     );
   }
