@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../data/database/pokemon_database.dart';
+import '../models/movement.dart';
 import 'pokemon_event.dart';
 import 'pokemon_state.dart';
 
@@ -19,7 +20,8 @@ class PokemonBloc extends Bloc<PokemonEvent, PokemonState> {
     emit(PokemonLoading());
     try {
       final pokemons = await database.getPokemons();
-      emit(PokemonLoaded(pokemons));
+      final movements = await database.getMovements();
+      emit(PokemonLoaded(pokemons, movements));
     } catch (e) {
       emit(PokemonError('Erro ao carregar dados'));
     }
@@ -71,13 +73,22 @@ class PokemonBloc extends Bloc<PokemonEvent, PokemonState> {
         if (equipe.length >= 6) {
           emit(PokemonOperationFailure('A equipe já está cheia! (Máx. 6)'));
 
-          emit(PokemonLoaded(currentState.pokemons));
+          emit(PokemonLoaded(currentState.pokemons, currentState.movements));
           return;
         }
       }
 
       final atualizado = pokemon.copyWith(estaNaEquipe: !pokemon.estaNaEquipe);
       await database.updatePokemon(atualizado);
+
+      final newMovement = Movement(
+        pokemonId: atualizado.id!,
+        pokemonName: atualizado.nome,
+        pokemonImageAsset: atualizado.imageAsset,
+        movedTo: atualizado.estaNaEquipe ? 'Equipe' : 'PC',
+        timestamp: DateTime.now(),
+      );
+      await database.insertMovement(newMovement);
 
       add(LoadPokemons());
     }

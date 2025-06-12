@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../models/movement.dart';
 import '../models/pokemon.dart';
 
 abstract class PokemonState extends Equatable {
@@ -14,11 +15,12 @@ class PokemonLoading extends PokemonState {}
 
 class PokemonLoaded extends PokemonState {
   final List<Pokemon> pokemons;
+  final List<Movement> movements;
 
-  const PokemonLoaded(this.pokemons);
+  const PokemonLoaded(this.pokemons, this.movements);
 
   @override
-  List<Object?> get props => [pokemons];
+  List<Object?> get props => [pokemons, movements];
 }
 
 class PokemonError extends PokemonState {
