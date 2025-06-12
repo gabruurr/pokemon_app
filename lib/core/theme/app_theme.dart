@@ -5,7 +5,7 @@ class AppTheme {
   static final ThemeData theme = ThemeData(
     colorScheme: ColorScheme.fromSeed(
       seedColor: Colors.blueAccent,
-      primary: const Color.fromARGB(255, 108, 158, 240),
+      primary: const Color.fromARGB(255, 42, 42, 42),
     ),
     textTheme: GoogleFonts.pressStart2pTextTheme().apply(
       bodyColor: Colors.black,
