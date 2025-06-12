@@ -19,4 +19,21 @@ class PokemonCard extends StatelessWidget {
 
     return Card();
   }
+
+ Widget _buildActionButton({
+    required BuildContext context,
+    required IconData icon,
+    required String tooltip,
+    required VoidCallback onPressed,
+    Color? color,
+  }) {
+    return IconButton(
+      icon: Icon(icon, size: 20),
+      color: color ?? Theme.of(context).colorScheme.primary,
+      tooltip: tooltip,
+      onPressed: onPressed,
+      padding: EdgeInsets.zero,
+      constraints: const BoxConstraints(),
+    );
+  }
 }
