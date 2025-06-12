@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:pokemon_app/screens/home_screen.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -14,6 +15,8 @@ void main() async {
 
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
+
+  await initializeDateFormatting('pt_BR', null);
 
   runApp(const PokemonApp());
 }
