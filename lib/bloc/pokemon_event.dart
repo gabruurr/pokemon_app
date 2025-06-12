@@ -27,3 +27,21 @@ class UpdatePokemon extends PokemonEvent {
   @override
   List<Object?> get props => [pokemon];
 }
+
+class DeletePokemon extends PokemonEvent {
+  final int id;
+
+  const DeletePokemon(this.id);
+
+  @override
+  List<Object?> get props => [id];
+}
+
+class ToggleEquipeStatus extends PokemonEvent {
+  final Pokemon pokemon;
+
+  const ToggleEquipeStatus(this.pokemon);
+
+  @override
+  List<Object?> get props => [pokemon];
+}
