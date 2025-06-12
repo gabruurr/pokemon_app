@@ -9,7 +9,9 @@ class PokemonBloc extends Bloc<PokemonEvent, PokemonState> {
   PokemonBloc({required this.database}) : super(PokemonLoading()) {
     on<LoadPokemons>(_onLoadPokemons);
     on<AddPokemon>(_onAddPokemon);
-    
+    on<UpdatePokemon>(_onUpdatePokemon);
+    on<DeletePokemon>(_onDeletePokemon);
+    on<ToggleEquipeStatus>(_onToggleStatus);
   }
 
   Future<void> _onLoadPokemons(
@@ -39,4 +41,41 @@ class PokemonBloc extends Bloc<PokemonEvent, PokemonState> {
     }
   }
 
+  Future<void> _onUpdatePokemon(
+      UpdatePokemon event, Emitter<PokemonState> emit) async {
+    if (state is PokemonLoaded) {
+      database.updatePokemon(event.pokemon);
+      add(LoadPokemons());
+    }
+  }
+
+  Future<void> _onDeletePokemon(
+      DeletePokemon event, Emitter<PokemonState> emit) async {
+    if (state is PokemonLoaded) {
+      await database.deletePokemon(event.id);
+
+      add(LoadPokemons());
+    }
+  }
+
+  Future<void> _onToggleStatus(
+      ToggleEquipeStatus event, Emitter<PokemonState> emit) async {
+    if (state is PokemonLoaded) {
+      final currentState = state as PokemonLoaded;
+      final pokemon = event.pokemon;
+
+    
+          emit(PokemonOperationFailure('A equipe já está cheia! (Máx. 6)'));
+
+          emit(PokemonLoaded(currentState.pokemons));
+          return;
+        
+      }
+
+      final atualizado = pokemon.copyWith(estaNaEquipe: !pokemon.estaNaEquipe);
+      await database.updatePokemon(atualizado);
+
+      add(LoadPokemons());
+    }
+  }
 }
