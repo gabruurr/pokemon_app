@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/pokemon_bloc.dart';
 import '../bloc/pokemon_event.dart';
+import '../core/utils/type_utills.dart';
 import '../models/pokemon.dart';
 
 class FormScreen extends StatefulWidget {
@@ -97,10 +98,86 @@ class _FormScreenState extends State<FormScreen> {
       Navigator.pop(context);
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw Placeholder();
+    final isEdicao = widget.pokemon != null;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(isEdicao ? 'Editar Pokémon' : 'Capturar Pokémon'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            spacing: 20,
+            children: [
+              TextFormField(
+                controller: _nomeController,
+                decoration: const InputDecoration(labelText: 'Nome do Pokémon'),
+                validator: (value) =>
+                    value == null || value.isEmpty ? 'Informe o nome' : null,
+              ),
+              DropdownButtonFormField<String>(
+                value: _tipoSelecionado,
+                decoration: const InputDecoration(labelText: 'Tipo'),
+                items: _tipos.map((tipo) {
+                  final symbol = TypeUtils.getSymbolForType(tipo);
+                  return DropdownMenuItem(
+                    value: tipo,
+                    child: Text(
+                      '$symbol  $tipo',
+                    ),
+                  );
+                }).toList(),
+                onChanged: (valor) {
+                  setState(() => _tipoSelecionado = valor!);
+                },
+              ),
+              const Text('Imagem do Pokémon', style: TextStyle(fontSize: 16)),
+              SizedBox(
+                height: 80,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _availableImages.length,
+                  separatorBuilder: (_, __) => const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 3)),
+                  itemBuilder: (context, index) {
+                    final image = _availableImages[index];
+                    final isSelected = image == _selectedImageAsset;
+                    return GestureDetector(
+                      onTap: () => setState(() => _selectedImageAsset = image),
+                      child: Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: isSelected
+                                ? Theme.of(context).primaryColor
+                                : const Color.fromARGB(255, 91, 90, 90),
+                            width: isSelected ? 3 : 1,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Image.asset(image),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              ElevatedButton(
+                onPressed: _salvar,
+                child: Text(isEdicao ? 'Atualizar' : 'Capturar'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
