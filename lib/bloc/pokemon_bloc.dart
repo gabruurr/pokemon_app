@@ -68,7 +68,7 @@ class PokemonBloc extends Bloc<PokemonEvent, PokemonState> {
         final equipe =
             currentState.pokemons.where((p) => p.estaNaEquipe).toList();
 
-        if (equipe.length >= 4) {
+        if (equipe.length >= 6) {
           emit(PokemonOperationFailure('A equipe já está cheia! (Máx. 6)'));
 
           emit(PokemonLoaded(currentState.pokemons));
