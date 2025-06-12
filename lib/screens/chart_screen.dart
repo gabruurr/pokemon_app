@@ -101,7 +101,7 @@ class _ChartScreenState extends State<ChartScreen> {
                               ?.copyWith(fontWeight: FontWeight.bold),
                           children: [
                             TextSpan(
-                                text: ' foi movido para a ',
+                                text: ' foi movido para ',
                                 style: theme.textTheme.titleMedium),
                             TextSpan(
                               text: movement.movedTo,
