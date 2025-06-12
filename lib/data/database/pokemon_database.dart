@@ -1,5 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import '../../models/movement.dart';
 import '../../models/pokemon.dart';
 
 class PokemonDatabase {
@@ -37,6 +38,16 @@ class PokemonDatabase {
       )
     ''');
 
+    await db.execute('''
+      CREATE TABLE movements (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        pokemonId INTEGER NOT NULL,
+        pokemonName TEXT NOT NULL,
+        pokemonImageAsset TEXT NOT NULL,
+        movedTo TEXT NOT NULL,
+        timestamp TEXT NOT NULL
+      )
+    ''');
   }
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -45,9 +56,30 @@ class PokemonDatabase {
           "ALTER TABLE pokemons ADD COLUMN imageAsset TEXT NOT NULL DEFAULT 'assets/images/placeholder.png'");
     }
 
-
+    if (oldVersion < 3) {
+      await db.execute('''
+        CREATE TABLE movements (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          pokemonId INTEGER NOT NULL,
+          pokemonName TEXT NOT NULL,
+          pokemonImageAsset TEXT NOT NULL,
+          movedTo TEXT NOT NULL,
+          timestamp TEXT NOT NULL
+        )
+      ''');
+    }
   }
 
+  Future<int> insertMovement(Movement movement) async {
+    final db = await instance.database;
+    return await db.insert('movements', movement.toMap());
+  }
+
+  Future<List<Movement>> getMovements() async {
+    final db = await instance.database;
+    final maps = await db.query('movements', orderBy: 'timestamp DESC');
+    return maps.map((map) => Movement.fromMap(map)).toList();
+  }
 
   Future<List<Pokemon>> getPokemons() async {
     final db = await instance.database;
