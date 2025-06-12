@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'bloc/pokemon_bloc.dart';
+import 'bloc/pokemon_event.dart';
+import 'core/theme/app_theme.dart';
+import 'data/database/pokemon_database.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(const PokemonApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class PokemonApp extends StatelessWidget {
+  const PokemonApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
+    return BlocProvider(
+      create: (_) =>
+          PokemonBloc(database: PokemonDatabase.instance)..add(LoadPokemons()),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Pokémon App',
+        theme: AppTheme.theme,
+        home: const Placeholder(),
       ),
     );
   }
