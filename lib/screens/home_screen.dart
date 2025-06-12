@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pokemon_app/screens/form_screen.dart';
 
 import '../bloc/pokemon_bloc.dart';
 import '../bloc/pokemon_event.dart';
@@ -114,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const Placeholder()),
+                    MaterialPageRoute(builder: (_) => const FormScreen()),
                   );
                 },
                 tooltip: 'Capturar Pokemon',
