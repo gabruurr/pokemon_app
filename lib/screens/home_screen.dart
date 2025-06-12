@@ -7,6 +7,7 @@ import '../bloc/pokemon_bloc.dart';
 import '../bloc/pokemon_event.dart';
 import '../bloc/pokemon_state.dart';
 import '../models/pokemon.dart';
+import '../widgets/pokemon_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -33,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _playClickSound() {
-    _audioPlayer.play(AssetSource('audios/sound.mp3'));
+    _audioPlayer.play(AssetSource('audio/sound.mp3'));
   }
 
   void _stopSound() {
@@ -57,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       itemCount: pokemonList.length,
       itemBuilder: (context, index) {
-        return Placeholder();
+        return PokemonCard(pokemon: pokemonList[index]);
       },
     );
   }
