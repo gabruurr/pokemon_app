@@ -20,3 +20,21 @@ class PokemonLoaded extends PokemonState {
   @override
   List<Object?> get props => [pokemons];
 }
+
+class PokemonError extends PokemonState {
+  final String message;
+
+  const PokemonError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class PokemonOperationFailure extends PokemonState {
+  final String message;
+
+  const PokemonOperationFailure(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
