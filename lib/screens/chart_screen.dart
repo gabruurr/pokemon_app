@@ -8,14 +8,14 @@ import '../bloc/pokemon_bloc.dart';
 import '../bloc/pokemon_state.dart';
 import '../models/pokemon.dart';
 
-class TimelineScreen extends StatefulWidget {
-  const TimelineScreen({super.key});
+class ChartScreen extends StatefulWidget {
+  const ChartScreen({super.key});
 
   @override
-  State<TimelineScreen> createState() => _TimelineScreenState();
+  State<ChartScreen> createState() => _ChartScreenState();
 }
 
-class _TimelineScreenState extends State<TimelineScreen> {
+class _ChartScreenState extends State<ChartScreen> {
   int _selectedViewIndex = 0;
 
   @override
@@ -52,7 +52,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
                 ),
                 Expanded(
                   child: _selectedViewIndex == 0
-                      ? _buildTimelineView(state.movements)
+                      ? _buildChartView(state.movements)
                       : _buildPieChartView(state.pokemons),
                 ),
               ],
@@ -64,7 +64,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
     );
   }
 
-  Widget _buildTimelineView(List<Movement> movements) {
+  Widget _buildChartView(List<Movement> movements) {
     if (movements.isEmpty) {
       return const Center(
         child: Text('Nenhuma movimentação registrada.',
