@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+
 
 import 'bloc/pokemon_bloc.dart';
 import 'bloc/pokemon_event.dart';
 import 'core/theme/app_theme.dart';
 import 'data/database/pokemon_database.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  sqfliteFfiInit();
+  databaseFactory = databaseFactoryFfi;
+
   runApp(const PokemonApp());
 }
 
