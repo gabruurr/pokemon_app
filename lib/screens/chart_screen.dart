@@ -8,25 +8,63 @@ import '../bloc/pokemon_bloc.dart';
 import '../bloc/pokemon_state.dart';
 import '../models/pokemon.dart';
 
-class ChartScreen extends StatefulWidget {
-  const ChartScreen({super.key});
+class TimelineScreen extends StatefulWidget {
+  const TimelineScreen({super.key});
 
   @override
-  State<ChartScreen> createState() => _ChartScreenState();
+  State<TimelineScreen> createState() => _TimelineScreenState();
 }
 
-class _ChartScreenState extends State<ChartScreen> {
+class _TimelineScreenState extends State<TimelineScreen> {
   int _selectedViewIndex = 0;
-  
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw Placeholder();
+    return BlocBuilder<PokemonBloc, PokemonState>(
+      builder: (context, state) {
+        if (state is PokemonLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (state is PokemonLoaded) {
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            child: Column(
+              children: [
+                SegmentedButton<int>(
+                  segments: const <ButtonSegment<int>>[
+                    ButtonSegment<int>(
+                      value: 0,
+                      label: Text('Linha do Tempo'),
+                      icon: Icon(Icons.timeline),
+                    ),
+                    ButtonSegment<int>(
+                      value: 1,
+                      label: Text('Gráfico'),
+                      icon: Icon(Icons.pie_chart_outline),
+                    ),
+                  ],
+                  selected: {_selectedViewIndex},
+                  onSelectionChanged: (Set<int> newSelection) {
+                    setState(() {
+                      _selectedViewIndex = newSelection.first;
+                    });
+                  },
+                ),
+                Expanded(
+                  child: _selectedViewIndex == 0
+                      ? _buildTimelineView(state.movements)
+                      : _buildPieChartView(state.pokemons),
+                ),
+              ],
+            ),
+          );
+        }
+        return const Center(child: Text('Erro ao carregar dados.'));
+      },
+    );
   }
 
-
-
-Widget _buildTimelineView(List<Movement> movements) {
+  Widget _buildTimelineView(List<Movement> movements) {
     if (movements.isEmpty) {
       return const Center(
         child: Text('Nenhuma movimentação registrada.',
@@ -100,8 +138,7 @@ Widget _buildTimelineView(List<Movement> movements) {
     );
   }
 
-
-Widget _buildPieChartView(List<Pokemon> pokemons) {
+  Widget _buildPieChartView(List<Pokemon> pokemons) {
     final totalEquipe = pokemons.where((p) => p.estaNaEquipe).length;
     final totalPC = pokemons.where((p) => !p.estaNaEquipe).length;
 
@@ -138,5 +175,4 @@ Widget _buildPieChartView(List<Pokemon> pokemons) {
       ),
     );
   }
-
 }
