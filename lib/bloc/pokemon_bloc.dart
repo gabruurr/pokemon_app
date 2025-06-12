@@ -44,7 +44,7 @@ class PokemonBloc extends Bloc<PokemonEvent, PokemonState> {
   Future<void> _onUpdatePokemon(
       UpdatePokemon event, Emitter<PokemonState> emit) async {
     if (state is PokemonLoaded) {
-      database.updatePokemon(event.pokemon);
+      await database.updatePokemon(event.pokemon);
       add(LoadPokemons());
     }
   }
@@ -64,12 +64,16 @@ class PokemonBloc extends Bloc<PokemonEvent, PokemonState> {
       final currentState = state as PokemonLoaded;
       final pokemon = event.pokemon;
 
-    
+      if (!pokemon.estaNaEquipe) {
+        final equipe =
+            currentState.pokemons.where((p) => p.estaNaEquipe).toList();
+
+        if (equipe.length >= 4) {
           emit(PokemonOperationFailure('A equipe já está cheia! (Máx. 6)'));
 
           emit(PokemonLoaded(currentState.pokemons));
           return;
-        
+        }
       }
 
       final atualizado = pokemon.copyWith(estaNaEquipe: !pokemon.estaNaEquipe);
