@@ -36,6 +36,7 @@ class PokemonDatabase {
         estaNaEquipe INTEGER NOT NULL
       )
     ''');
+
   }
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -43,7 +44,10 @@ class PokemonDatabase {
       await db.execute(
           "ALTER TABLE pokemons ADD COLUMN imageAsset TEXT NOT NULL DEFAULT 'assets/images/placeholder.png'");
     }
+
+
   }
+
 
   Future<List<Pokemon>> getPokemons() async {
     final db = await instance.database;
@@ -55,5 +59,20 @@ class PokemonDatabase {
   Future<int> insertPokemon(Pokemon pokemon) async {
     final db = await instance.database;
     return await db.insert('pokemons', pokemon.toMap());
+  }
+
+  Future<int> updatePokemon(Pokemon pokemon) async {
+    final db = await instance.database;
+    return await db.update(
+      'pokemons',
+      pokemon.toMap(),
+      where: 'id = ?',
+      whereArgs: [pokemon.id],
+    );
+  }
+
+  Future<int> deletePokemon(int id) async {
+    final db = await instance.database;
+    return await db.delete('pokemons', where: 'id = ?', whereArgs: [id]);
   }
 }
